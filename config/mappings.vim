@@ -61,6 +61,16 @@ endif
 " Personal maps
 """"""""""""""""""""""""""""""""""""""""""""
 nnoremap <A-r>			:source $MYVIMRC<CR>
+"" Open URLs
+function! s:open_link() abort
+    let file = expand('<cfile>')
+    if isdirectory(file) 
+        execute 'edit' file
+    else
+        call jobstart(['xdg-open', file], {'detach': v:true})
+    endif
+endfunction
+map <A-x> <Cmd>call s:open_link()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""
 " Quickly open configs in a new tab
