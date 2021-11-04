@@ -134,24 +134,27 @@ endif
 " Personal maps
 """"""""""""""""""""""""""""""""""""""""""""
 nnoremap <A-r> :source $MYVIMRC<CR>
+
 "" Open URLs
-function! s:open_link() abort
-    let file = expand('<cfile>')
-    if isdirectory(file)
-        execute 'edit' file
-    else
-        call jobstart(['xdg-open', file], {'detach': v:true})
-    endif
+function! HandleURL()
+  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*[^\)]')
+  echo s:uri
+  if s:uri != ""
+    silent exec "!open '".s:uri."'"
+  else
+    echo "No URI found in line."
+  endif
 endfunction
-map <A-x> <Cmd>call s:open_link()<CR>
+map <leader>u :call HandleURL()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""
 " Quickly open configs in a new tab
 """"""""""""""""""""""""""""""""""""""""""""
-nnoremap <Leader>cm	:tabnew ~/.config/nvim/config/mappings.vim<CR>
-nnoremap <Leader>cf	:tabnew ~/.config/fish/config.fish<CR>
-nnoremap <Leader>ci	:tabnew ~/.config/i3/config<CR>
-nnoremap <Leader>ct	:tabnew ~/.config/wezterm/wezterm.lua<CR>
+nnoremap <Leader>cm	:tabnew ~/.config/nvim/config/mappings.vim<CR>:lcd %:p:h<CR>
+nnoremap <Leader>cf	:tabnew ~/.config/fish/config.fish<CR>:lcd %:p:h<CR>
+nnoremap <Leader>ci	:tabnew ~/.config/i3/config<CR>:lcd %:p:h<CR>
+nnoremap <Leader>ct	:tabnew ~/.config/wezterm/wezterm.lua<CR>:lcd %:p:h<CR>
+nnoremap <Leader>cv	:tabnew ~/.config/nvim/README.md<CR>:lcd %:p:h<CR>
 
 " Double leader key for toggling visual-line mode
 nmap <Leader><Leader> V
