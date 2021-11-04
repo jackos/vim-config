@@ -17,6 +17,8 @@ if empty(s:package_manager) || s:package_manager ==# 'none'
 	finish
 endif
 
+let g:vimwiki_list = [{'path':'/home/jacko/vimwiki', 'path_html':'~/vimwiki/export/html/'}]
+
 " Enables 24-bit RGB color in the terminal
 if has('termguicolors')
 	if empty($COLORTERM) || $COLORTERM =~# 'truecolor\|24bit'

@@ -133,7 +133,7 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""
 " Personal maps
 """"""""""""""""""""""""""""""""""""""""""""
-nnoremap <A-r>			:source $MYVIMRC<CR>
+nnoremap <A-r> :source $MYVIMRC<CR>
 "" Open URLs
 function! s:open_link() abort
     let file = expand('<cfile>')
@@ -341,7 +341,7 @@ cnoremap <Down> <C-n>
 " ---------------
 
 " Switch (window) to the directory of the current opened buffer
-nmap <Leader>cd :lcd %:p:h<CR>:pwd<CR>
+nmap <A-c> :lcd %:p:h<CR>:pwd<CR>
 
 " Open file under the cursor in a vsplit
 nnoremap gf <cmd>vertical wincmd f<CR>

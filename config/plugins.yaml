@@ -255,12 +255,9 @@
     \   { 'diary_header': 'Diary',
     \     'diary_link_fmt': '%Y-%m/%d',
     \     'auto_toc': 1,
-    \     'path': '~/docs/wiki/',
+    \     'path': '~/vimwiki/',
     \     'syntax': 'markdown',
     \     'ext': '.md' },
-    \   { 'path': '~/docs/books/',
-    \     'syntax': 'markdown',
-    \     'ext': '.md' }
     \ ]
 
 # ==========================================
