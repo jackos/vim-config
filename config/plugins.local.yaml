@@ -1,1 +1,9 @@
 - repo: drewtempelmeyer/palenight.vim
+
+- repo: iamcco/markdown-preview.nvim
+  on_ft: [ markdown, pandoc.markdown, rmd ]
+    #hook_add: |-
+    #:!sh -c "cd app && yarn install;"
+
+
+

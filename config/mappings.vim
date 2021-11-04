@@ -27,7 +27,7 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""
 " Personal maps
 """"""""""""""""""""""""""""""""""""""""""""
-nnoremap <A-r> 			:source $MYVIMRC<CR>
+nnoremap <A-r>     :source $MYVIMRC<CR>
 
 " Double leader key for toggling visual-line mode
 nmap <Leader><Leader> V
@@ -257,13 +257,14 @@ nnoremap <C-S-Tab> <cmd>tabprevious<CR>
 nnoremap <C-S-j>   <cmd>tabnext<CR>
 nnoremap <C-S-k>   <cmd>tabprevious<CR>
 
+nnoremap <A-m>     <cmd>MarkdownPreview<CR>
+
 " Moving tabs
 nnoremap <A-{> <cmd>-tabmove<CR>
 nnoremap <A-}> <cmd>+tabmove<CR>
 
 " Show syntax highlight groups for character under cursor
-nmap <Leader>tt <cmd>echo
-	\ 'hi<' . synIDattr(synID(line('.'), col('.'), 1), 'name')
+nmap <Leader>tt <cmd>echo 'hi<' . synIDattr(synID(line('.'), col('.'), 1), 'name')
 	\ . '> trans<' . synIDattr(synID(line('.'), col('.'), 0), 'name') . '> lo<'
 	\ . synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name') . '>'<CR>
 
@@ -297,17 +298,6 @@ endif
 nnoremap g<C-i> <cmd>call <SID>jump_buffer(-1)<CR>
 nnoremap g<C-o> <cmd>call <SID>jump_buffer(1)<CR>
 
-if has('mac')
-	" Open the macOS dictionary on current word
-	nnoremap <Leader>? <cmd>silent !open dict://<cword><CR>
-
-	" Use Marked for real-time Markdown preview
-	" See: https://marked2app.com/
-	if executable('/Applications/Marked 2.app/Contents/MacOS/Marked 2')
-		autocmd user_events FileType markdown
-			\ nnoremap <buffer><Leader>P <cmd>silent !open -a Marked\ 2.app '%:p'<CR>
-	endif
-endif
 
 " }}}
 " Windows, buffers and tabs {{{
@@ -328,8 +318,8 @@ nnoremap <C-x> <C-w>x
 nnoremap  [Window]   <Nop>
 nmap      s [Window]
 
+nnoremap <C-w>			<cmd>close<CR>
 nnoremap [Window]b  <cmd>buffer#<CR>
-nnoremap [Window]c  <cmd>close<CR>
 nnoremap [Window]d  <cmd>bdelete<CR>
 nnoremap [Window]v  <cmd>split<CR>
 nnoremap [Window]g  <cmd>vsplit<CR>
