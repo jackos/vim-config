@@ -15,19 +15,92 @@ nnoremap <Up>    <cmd>resize +8<CR>
 nnoremap <Down>  <cmd>resize -8<CR>
 nnoremap <Left>  <cmd>vertical resize +8<CR>
 nnoremap <Right> <cmd>vertical resize -8<CR>
+" With this function you can reuse the same terminal in neovim.
+" You can toggle the terminal and also send a command to the same terminal.
 
-""""""""""""""""""""""""""""""""""""""""""""""""
-"" Terminal
-""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <A-t> :bot new<CR>:term<CR>i
-inoremap <A-t> <Esc>:bot new<CR>:term<CR>i
-tnoremap <A-t> <C-\><C-n>:vsplit<CR>:term<CR>i
+let s:monkey_terminal_window = -1
+let s:monkey_terminal_buffer = -1
+let s:monkey_terminal_job_id = -1
+let s:monkey_terminal_window_size = -1
 
+function! MonkeyTerminalOpen()
+  " Check if buffer exists, if not create a window and a buffer
+  if !bufexists(s:monkey_terminal_buffer)
+    " Creates a window call monkey_terminal
+    new monkey_terminal
+    " Moves the window to the bottom
+    wincmd J
+    resize 15
+    let s:monkey_terminal_job_id = termopen($SHELL, { 'detach': 1 })
+
+     " Change the name of the buffer to "Terminal 1"
+     silent file Terminal\ 1
+     " Gets the id of the terminal window
+     let s:monkey_terminal_window = win_getid()
+     let s:monkey_terminal_buffer = bufnr('%')
+
+    " The buffer of the terminal won't appear in the list of the buffers
+    " when calling :buffers command
+    set nobuflisted
+  else
+    if !win_gotoid(s:monkey_terminal_window)
+    sp
+    " Moves to the window below the current one
+    wincmd J
+    execute "resize " . s:monkey_terminal_window_size
+    buffer Terminal\ 1
+     " Gets the id of the terminal window
+     let s:monkey_terminal_window = win_getid()
+    endif
+  endif
+endfunction
+
+function! MonkeyTerminalToggle()
+  if win_gotoid(s:monkey_terminal_window)
+    call MonkeyTerminalClose()
+  else
+    call MonkeyTerminalOpen()
+  endif
+endfunction
+
+function! MonkeyTerminalClose()
+  if win_gotoid(s:monkey_terminal_window)
+    let s:monkey_terminal_window_size = winheight(s:monkey_terminal_window)
+    " close the current window
+    hide
+  endif
+endfunction
+
+function! MonkeyTerminalExec(cmd)
+  if !win_gotoid(s:monkey_terminal_window)
+    call MonkeyTerminalOpen()
+  endif
+
+  " clear current input
+  call jobsend(s:monkey_terminal_job_id, "clear\n")
+
+  " run cmd
+  call jobsend(s:monkey_terminal_job_id, a:cmd . "\n")
+  normal! G
+  wincmd p
+endfunction
+
+" With this maps you can now toggle the terminal
+nnoremap <A-T> :call MonkeyTerminalToggle()<cr>i
+tnoremap <A-T> <C-\><C-n>:call MonkeyTerminalToggle()<cr>i
+nnoremap <silent> <A-t> :silent !i3term<CR>
+
+" inoremap <A-t> <Esc>:bot new<CR>:term<CR>i
+" tnoremap <A-t> <C-\><C-n>:vsplit<CR>:term<CR>i
+"
 " Terminal go back to normal mode
 "tnoremap <Esc> <C-\><C-n>
 "tnoremap <C-k> <C-\><C-n>
 "tnoremap :q! <C-\><C-n>:q!<CR>
 
+
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd BufLeave term://* stopinsert
 " Terminal mappings
 if exists(':tnoremap')
 	if has('nvim')
@@ -64,7 +137,7 @@ nnoremap <A-r>			:source $MYVIMRC<CR>
 "" Open URLs
 function! s:open_link() abort
     let file = expand('<cfile>')
-    if isdirectory(file) 
+    if isdirectory(file)
         execute 'edit' file
     else
         call jobstart(['xdg-open', file], {'detach': v:true})
@@ -75,9 +148,10 @@ map <A-x> <Cmd>call s:open_link()<CR>
 """"""""""""""""""""""""""""""""""""""""""""
 " Quickly open configs in a new tab
 """"""""""""""""""""""""""""""""""""""""""""
-nnoremap <Leader>cm :tabnew ~/.config/nvim/config/mappings.vim<CR>
+nnoremap <Leader>cm	:tabnew ~/.config/nvim/config/mappings.vim<CR>
 nnoremap <Leader>cf	:tabnew ~/.config/fish/config.fish<CR>
 nnoremap <Leader>ci	:tabnew ~/.config/i3/config<CR>
+nnoremap <Leader>ct	:tabnew ~/.config/wezterm/wezterm.lua<CR>
 
 " Double leader key for toggling visual-line mode
 nmap <Leader><Leader> V
@@ -198,14 +272,14 @@ nnoremap <Leader>cn *``cgn
 nnoremap <Leader>cN *``cgN
 
 " Change selected word in a repeatable manner
-xnoremap <expr> <Leader>cn "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgn"
-xnoremap <expr> <Leader>cN "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgN"
+xnoremap <expr> <Leader>cw "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgn"
+xnoremap <expr> <Leader>cW "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgN"
 
 " Duplicate paragraph
 nnoremap <Leader>cp yap<S-}>p
 
 " Remove spaces at the end of lines
-nnoremap <Leader>cw <cmd>keeppatterns %substitute/\s\+$//e<CR>
+nnoremap <Leader>cs <cmd>keeppatterns %substitute/\s\+$//e<CR>
 
 " }}}
 " Search & Replace {{{
@@ -297,16 +371,9 @@ nnoremap g1 <cmd>tabfirst<CR>
 nnoremap g5 <cmd>tabprevious<CR>
 nnoremap g9 <cmd>tablast<CR>
 
-nnoremap <A-q>     <cmd>:q!<CR>
 nnoremap <A-w>     <cmd>tabclose<CR>
 nnoremap <A-l>     <cmd>tabnext<CR>
 nnoremap <A-h>     <cmd>tabprevious<CR>
-nnoremap <A-[>     <cmd>tabprevious<CR>
-nnoremap <A-]>     <cmd>tabnext<CR>
-nnoremap <C-Tab>   <cmd>tabnext<CR>
-nnoremap <C-S-Tab> <cmd>tabprevious<CR>
-nnoremap <C-S-j>   <cmd>tabnext<CR>
-nnoremap <C-S-k>   <cmd>tabprevious<CR>
 nnoremap <A-m>     <cmd>MarkdownPreview<CR>
 
 " Moving tabs

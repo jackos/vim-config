@@ -13,3 +13,4 @@ require('auto-session').setup({
 	auto_restore_enabled = true,
 	auto_session_suppress_dirs = { '/etc', '/tmp', HOME, HOME .. '/code' },
 })
+
