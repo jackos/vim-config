@@ -4,11 +4,6 @@
 " Runtime and Plugins
 " ===
 
-augroup MyColorSchemeOverrides
-    autocmd!
-    autocmd ColorScheme * highlight Normal ctermbg=yellow
-augroup END
-
 if ! has('nvim') && &compatible
 	" vint: -ProhibitSetNoCompatible
 	set nocompatible

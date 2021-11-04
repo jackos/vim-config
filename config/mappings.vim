@@ -247,6 +247,7 @@ nnoremap g1 <cmd>tabfirst<CR>
 nnoremap g5 <cmd>tabprevious<CR>
 nnoremap g9 <cmd>tablast<CR>
 
+nnoremap <A-w>     <cmd>tabclose<CR>
 nnoremap <A-l>     <cmd>tabnext<CR>
 nnoremap <A-h>     <cmd>tabprevious<CR>
 nnoremap <A-[>     <cmd>tabprevious<CR>

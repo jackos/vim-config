@@ -10,7 +10,7 @@ let g:fern#default_hidden = 1
 let g:fern#keepalt_on_edit = 1
 let g:fern#keepjumps_on_edit = 1
 
-let g:fern#hide_cursor = 1
+let g:fern#hide_cursor = 0
 let g:fern#disable_viewer_auto_duplication = 1
 let g:fern#disable_drawer_auto_resize = 0
 
@@ -32,10 +32,6 @@ let s:original_width = g:fern#drawer_width
 nnoremap <Plug>(fern-close-drawer) :<C-u>FernDo close -drawer -stay<CR>
 
 function! s:init_fern()
-	if has('nvim')
-		setlocal winhighlight=CursorLine:UserSelectionBackground
-	end
-
 	silent! nnoremap <buffer> f <Nop>
 	silent! nnoremap <buffer> F <Nop>
 	silent! nnoremap <buffer> t <Nop>
