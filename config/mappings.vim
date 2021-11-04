@@ -10,15 +10,48 @@ endif
 
 " Elite-mode {{{
 " ----------
-if get(g:, 'elite_mode')
+" Disable arrow movement, resize windows instead.
+nnoremap <Up>    <cmd>resize +8<CR>
+nnoremap <Down>  <cmd>resize -8<CR>
+nnoremap <Left>  <cmd>vertical resize +8<CR>
+nnoremap <Right> <cmd>vertical resize -8<CR>
 
-	" Disable arrow movement, resize windows instead.
-	nnoremap <Up>    <cmd>resize +1<CR>
-	nnoremap <Down>  <cmd>resize -1<CR>
-	nnoremap <Left>  <cmd>vertical resize +1<CR>
-	nnoremap <Right> <cmd>vertical resize -1<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""
+"" Terminal
+""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <A-t> :bot new<CR>:term<CR>i
+inoremap <A-t> <Esc>:bot new<CR>:term<CR>i
+tnoremap <A-t> <C-\><C-n>:vsplit<CR>:term<CR>i
 
+" Terminal go back to normal mode
+"tnoremap <Esc> <C-\><C-n>
+"tnoremap <C-k> <C-\><C-n>
+"tnoremap :q! <C-\><C-n>:q!<CR>
+
+" Terminal mappings
+if exists(':tnoremap')
+	if has('nvim')
+		" Windows
+		tnoremap <C-h> <C-\><C-n><C-W>h
+		tnoremap <C-k> <C-\><C-n><C-W>k
+		tnoremap <C-l> <C-\><C-n><C-W>l
+		tnoremap <C-j> <C-\><C-n><C-W>j
+		tnoremap <F8> <C-\><C-n>
+		tnoremap <C-w> <C-\><C-n>:bwipeout!<CR>
+		" Tabs
+		tnoremap <A-h> <C-\><C-n>:tabprevious<CR>
+		tnoremap <A-j> <C-\><C-n><C-W>j
+		tnoremap <A-k> <C-\><C-n><C-W>k
+		tnoremap <A-l> <C-\><C-n>:tabnext<CR>
+	else
+		tnoremap <C-k> <C-w><C-k>
+		tnoremap <C-h> <C-w><C-h>
+		tnoremap <C-l> <C-w><C-l>
+		tnoremap <C-w> <C-w><C-w>
+		tnoremap <C-j> <C-w>
+	endif
 endif
+
 
 " }}}
 " Navigation {{{
@@ -27,7 +60,14 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""
 " Personal maps
 """"""""""""""""""""""""""""""""""""""""""""
-nnoremap <A-r>     :source $MYVIMRC<CR>
+nnoremap <A-r>			:source $MYVIMRC<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""
+" Quickly open configs in a new tab
+""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <Leader>cm :tabnew ~/.config/nvim/config/mappings.vim<CR>
+nnoremap <Leader>cf	:tabnew ~/.config/fish/config.fish<CR>
+nnoremap <Leader>ci	:tabnew ~/.config/i3/config<CR>
 
 " Double leader key for toggling visual-line mode
 nmap <Leader><Leader> V
@@ -247,6 +287,7 @@ nnoremap g1 <cmd>tabfirst<CR>
 nnoremap g5 <cmd>tabprevious<CR>
 nnoremap g9 <cmd>tablast<CR>
 
+nnoremap <A-q>     <cmd>:q!<CR>
 nnoremap <A-w>     <cmd>tabclose<CR>
 nnoremap <A-l>     <cmd>tabnext<CR>
 nnoremap <A-h>     <cmd>tabprevious<CR>
@@ -256,7 +297,6 @@ nnoremap <C-Tab>   <cmd>tabnext<CR>
 nnoremap <C-S-Tab> <cmd>tabprevious<CR>
 nnoremap <C-S-j>   <cmd>tabnext<CR>
 nnoremap <C-S-k>   <cmd>tabprevious<CR>
-
 nnoremap <A-m>     <cmd>MarkdownPreview<CR>
 
 " Moving tabs
@@ -272,15 +312,6 @@ nmap <Leader>tt <cmd>echo 'hi<' . synIDattr(synID(line('.'), col('.'), 1), 'name
 " Custom Tools {{{
 " ------------
 
-" Terminal mappings
-if exists(':tnoremap')
-	if has('nvim')
-		tnoremap jj <C-\><C-n>
-	else
-		tnoremap <Esc><Esc>  <C-w>N
-		tnoremap jj          <C-w>N
-	endif
-endif
 
 " Append mode-line to current buffer
 nnoremap <Leader>ml <cmd>call <SID>append_modeline()<CR>
@@ -319,6 +350,7 @@ nnoremap  [Window]   <Nop>
 nmap      s [Window]
 
 nnoremap <C-w>			<cmd>close<CR>
+nnoremap <F4>				<cmd>quit<CR>
 nnoremap [Window]b  <cmd>buffer#<CR>
 nnoremap [Window]d  <cmd>bdelete<CR>
 nnoremap [Window]v  <cmd>split<CR>
