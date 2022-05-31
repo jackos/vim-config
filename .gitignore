@@ -10,3 +10,4 @@
 /config/local.plugins.yaml
 /config/local.vim
 sessions/**
+sessions%*
