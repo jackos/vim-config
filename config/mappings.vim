@@ -270,6 +270,15 @@ nmap <Leader>tt <cmd>echo 'hi<' . synIDattr(synID(line('.'), col('.'), 1), 'name
 " Custom Tools {{{
 " ------------
 
+" Terminal mappings
+if exists(':tnoremap')
+	if has('nvim')
+		tnoremap jj <C-\><C-n>
+	else
+		tnoremap <Esc><Esc>  <C-w>N
+		tnoremap jj          <C-w>N
+	endif
+endif
 
 " Append mode-line to current buffer
 nnoremap <Leader>ml <cmd>call <SID>append_modeline()<CR>
