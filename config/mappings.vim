@@ -10,19 +10,40 @@ endif
 
 " Elite-mode {{{
 " ----------
-if get(g:, 'elite_mode')
+" Disable arrow movement, resize windows instead.
+nnoremap <Up>    <cmd>resize +8<CR>
+nnoremap <Down>  <cmd>resize -8<CR>
+nnoremap <Left>  <cmd>vertical resize +8<CR>
+nnoremap <Right> <cmd>vertical resize -8<CR>
+""""""""""""""""""""""""""""""""""""""""""""
+" Personal maps
+""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <A-r> :source $MYVIMRC<CR>
+nnoremap <A-;> A;<Esc>
+nnoremap <Leader>nt :tabnew 
+nnoremap <Leader>nv :vsplit 
 
-	" Disable arrow movement, resize windows instead.
-	nnoremap <Up>    <cmd>resize +1<CR>
-	nnoremap <Down>  <cmd>resize -1<CR>
-	nnoremap <Left>  <cmd>vertical resize +1<CR>
-	nnoremap <Right> <cmd>vertical resize -1<CR>
+nnoremap <silent> <A-t> :silent !i3term<CR>
+"" Open URLs
+function! HandleURL()
+  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*[^\)]')
+  echo s:uri
+  if s:uri != ""
+    silent exec "!open '".s:uri."'"
+  else
+    echo "No URI found in line."
+  endif
+endfunction
+map <leader>u :call HandleURL()<cr>
 
-endif
-
-" }}}
-" Navigation {{{
-" ----------
+""""""""""""""""""""""""""""""""""""""""""""
+" Quickly open configs in a new tab
+""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <Leader>cm	:tabnew ~/.config/nvim/config/mappings.vim<CR>:lcd %:p:h<CR>
+nnoremap <Leader>cf	:tabnew ~/.config/fish/config.fish<CR>:lcd %:p:h<CR>
+nnoremap <Leader>ci	:tabnew ~/.config/i3/config<CR>:lcd %:p:h<CR>
+nnoremap <Leader>ct	:tabnew ~/.config/wezterm/wezterm.lua<CR>:lcd %:p:h<CR>
+nnoremap <Leader>cv	:tabnew ~/.config/nvim/README.md<CR>:lcd %:p:h<CR>
 
 " Double leader key for toggling visual-line mode
 nmap <Leader><Leader> V
@@ -53,11 +74,6 @@ nmap [a <cmd>lprev<CR>
 nnoremap ]w <cmd>WhitespaceNext<CR>
 nnoremap [w <cmd>WhitespacePrev<CR>
 
-" Navigation in command line
-cnoremap <C-h> <Home>
-cnoremap <C-l> <End>
-cnoremap <C-f> <Right>
-cnoremap <C-b> <Left>
 
 " }}}
 " Scroll {{{
@@ -129,10 +145,10 @@ xnoremap <S-Tab> <gv
 " nmap <<  <<_
 
 " Drag current line/s vertically and auto-indent
-nnoremap <Leader>k <cmd>move-2<CR>==
-nnoremap <Leader>j <cmd>move+<CR>==
-xnoremap <Leader>k :move'<-2<CR>gv=gv
-xnoremap <Leader>j :move'>+<CR>gv=gv
+nnoremap <C-j> <cmd>move+<CR>==
+nnoremap <C-k> <cmd>move-2<CR>==
+xnoremap <C-j> :move'>+<CR>gv=gv
+xnoremap <C-k> :move'<-2<CR>gv=gv
 
 " Duplicate lines without affecting PRIMARY and CLIPBOARD selections.
 nnoremap <Leader>d m`""Y""P``
@@ -143,14 +159,14 @@ nnoremap <Leader>cn *``cgn
 nnoremap <Leader>cN *``cgN
 
 " Change selected word in a repeatable manner
-xnoremap <expr> <Leader>cn "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgn"
-xnoremap <expr> <Leader>cN "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgN"
+xnoremap <expr> <Leader>cw "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgn"
+xnoremap <expr> <Leader>cW "y/\\V\<C-r>=escape(@\", '/')\<CR>\<CR>" . "``cgN"
 
 " Duplicate paragraph
 nnoremap <Leader>cp yap<S-}>p
 
 " Remove spaces at the end of lines
-nnoremap <Leader>cw <cmd>keeppatterns %substitute/\s\+$//e<CR>
+nnoremap <Leader>cs <cmd>keeppatterns %substitute/\s\+$//e<CR>
 
 " }}}
 " Search & Replace {{{
@@ -201,16 +217,20 @@ cnoremap <Down> <C-n>
 " ---------------
 
 " Switch (window) to the directory of the current opened buffer
-nmap <Leader>cd :lcd %:p:h<CR>:pwd<CR>
+nmap <A-c> :lcd %:p:h<CR>:pwd<CR>
 
 " Open file under the cursor in a vsplit
 nnoremap gf <cmd>vertical wincmd f<CR>
 
+
+nnoremap [C-s]x  <cmd>call <SID>window_empty_buffer()<CR>
+
+
 " Fast saving from all modes
-nnoremap <Leader>w <cmd>write<CR>
-nnoremap <C-s> <cmd>write<CR>
-xnoremap <C-s> <cmd>write<CR>
-cnoremap <C-s> <cmd>write<CR>
+nnoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
+inoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
+xnoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
+cnoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
 
 " }}}
 " Editor UI {{{
@@ -231,22 +251,18 @@ nnoremap g1 <cmd>tabfirst<CR>
 nnoremap g5 <cmd>tabprevious<CR>
 nnoremap g9 <cmd>tablast<CR>
 
-nnoremap <A-j>     <cmd>tabnext<CR>
-nnoremap <A-k>     <cmd>tabprevious<CR>
-nnoremap <A-[>     <cmd>tabprevious<CR>
-nnoremap <A-]>     <cmd>tabnext<CR>
-nnoremap <C-Tab>   <cmd>tabnext<CR>
-nnoremap <C-S-Tab> <cmd>tabprevious<CR>
-nnoremap <C-S-j>   <cmd>tabnext<CR>
-nnoremap <C-S-k>   <cmd>tabprevious<CR>
+nnoremap <C-w>     <cmd>tabclose<CR>
+nnoremap <C-l>     <cmd>tabnext<CR>
+nnoremap <C-h>     <cmd>tabprevious<CR>
+
+nnoremap <A-m>     <cmd>MarkdownPreview<CR>
 
 " Moving tabs
-nnoremap <A-{> <cmd>-tabmove<CR>
-nnoremap <A-}> <cmd>+tabmove<CR>
+nnoremap <C-{> <cmd>-tabmove<CR>
+nnoremap <C-}> <cmd>+tabmove<CR>
 
 " Show syntax highlight groups for character under cursor
-nmap <Leader>tt <cmd>echo
-	\ 'hi<' . synIDattr(synID(line('.'), col('.'), 1), 'name')
+nmap <Leader>tt <cmd>echo 'hi<' . synIDattr(synID(line('.'), col('.'), 1), 'name')
 	\ . '> trans<' . synIDattr(synID(line('.'), col('.'), 0), 'name') . '> lo<'
 	\ . synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name') . '>'<CR>
 
@@ -254,15 +270,6 @@ nmap <Leader>tt <cmd>echo
 " Custom Tools {{{
 " ------------
 
-" Terminal mappings
-if exists(':tnoremap')
-	if has('nvim')
-		tnoremap jj <C-\><C-n>
-	else
-		tnoremap <Esc><Esc>  <C-w>N
-		tnoremap jj          <C-w>N
-	endif
-endif
 
 " Append mode-line to current buffer
 nnoremap <Leader>ml <cmd>call <SID>append_modeline()<CR>
@@ -275,17 +282,6 @@ nnoremap <Leader>S ^vg_y:execute @@<CR>:echo 'Sourced line.'<CR>
 nnoremap g<C-i> <cmd>call <SID>jump_buffer(-1)<CR>
 nnoremap g<C-o> <cmd>call <SID>jump_buffer(1)<CR>
 
-if has('mac')
-	" Open the macOS dictionary on current word
-	nnoremap <Leader>? <cmd>silent !open dict://<cword><CR>
-
-	" Use Marked for real-time Markdown preview
-	" See: https://marked2app.com/
-	if executable('/Applications/Marked 2.app/Contents/MacOS/Marked 2')
-		autocmd user_events FileType markdown
-			\ nnoremap <buffer><Leader>P <cmd>silent !open -a Marked\ 2.app '%:p'<CR>
-	endif
-endif
 
 " }}}
 " Windows, buffers and tabs {{{
@@ -311,8 +307,13 @@ nnoremap <C-x> <C-w>x
 nnoremap  [Window]   <Nop>
 nmap      s [Window]
 
+nnoremap <A-w>	    <cmd>close<CR>
+nnoremap <F4> 	    <cmd>quit<CR>
+nnoremap <A-h>	    <C-W><C-h>
+nnoremap <A-j>	    <C-W><C-j>
+nnoremap <A-k>	    <C-W><C-k>
+nnoremap <A-l>	    <C-W><C-l>
 nnoremap [Window]b  <cmd>buffer#<CR>
-nnoremap [Window]c  <cmd>close<CR>
 nnoremap [Window]d  <cmd>bdelete<CR>
 nnoremap [Window]v  <cmd>split<CR>
 nnoremap [Window]g  <cmd>vsplit<CR>
@@ -321,6 +322,34 @@ nnoremap [Window]o  <cmd>only<CR>
 nnoremap [Window]q  <cmd>quit<CR>
 nnoremap [Window]x  <cmd>call <SID>window_empty_buffer()<CR>
 nnoremap [Window]z  <cmd>call <SID>zoom()<CR>
+
+function! MarkWindowSwap()
+    " marked window number
+    let g:markedWinNum = winnr()
+    let g:markedBufNum = bufnr("%")
+endfunction
+
+function! DoWindowSwap()
+    let curWinNum = winnr()
+    let curBufNum = bufnr("%")
+    " Switch focus to marked window
+    exe g:markedWinNum . "wincmd w"
+
+    " Load current buffer on marked window
+    exe 'hide buf' curBufNum
+
+    " Switch focus to current window
+    exe curWinNum . "wincmd w"
+
+    " Load marked buffer on current window
+    exe 'hide buf' g:markedBufNum
+endfunction
+
+nnoremap <A-H> :call MarkWindowSwap()<CR> <C-w>h :call DoWindowSwap()<CR>
+nnoremap <A-J> :call MarkWindowSwap()<CR> <C-w>j :call DoWindowSwap()<CR>
+nnoremap <A-K> :call MarkWindowSwap()<CR> <C-w>k :call DoWindowSwap()<CR>
+nnoremap <A-L> :call MarkWindowSwap()<CR> <C-w>l :call DoWindowSwap()<CR>
+
 
 " Split current buffer, go to previous window and previous buffer
 nnoremap [Window]sv <cmd>split<CR>:wincmd p<CR>:e#<CR>

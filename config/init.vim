@@ -17,6 +17,8 @@ if empty(s:package_manager) || s:package_manager ==# 'none'
 	finish
 endif
 
+let g:vimwiki_list = [{'path':'/home/jacko/vimwiki', 'path_html':'~/vimwiki/export/html/'}]
+
 " Enables 24-bit RGB color in the terminal
 if has('termguicolors')
 	if empty($COLORTERM) || $COLORTERM =~# 'truecolor\|24bit'
@@ -41,6 +43,9 @@ endif
 " let g:loaded_zip = 1
 " let g:loaded_zipPlugin = 1
 
+autocmd BufWritePre *.go lua goimports(1000)
+
+let g:enable_universal_quit_mapping = 0  " Disable normal 'q' mapping
 let g:loaded_getscript = 1
 let g:loaded_getscriptPlugin = 1
 let g:loaded_vimball = 1
@@ -401,5 +406,3 @@ function! s:test_python_yaml()
 endfunction
 
 call s:main()
-
-" vim: set ts=2 sw=2 tw=80 noet :

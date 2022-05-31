@@ -1,0 +1,4 @@
+- repo: folke/tokyonight.nvim
+- repo: metakirby5/codi.vim
+- repo: iamcco/markdown-preview.nvim
+  on_ft: [ markdown, pandoc.markdown, rmd ]

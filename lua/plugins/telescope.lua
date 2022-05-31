@@ -57,6 +57,13 @@ pickers.grep_string_cursor = function()
 	})
 end
 
+pickers.grep_string_vimwiki = function()
+	require'telescope.builtin'.live_grep({
+		cwd = "~/vimwiki",
+		default_text = vim.fn.expand('<cword>'),
+	})
+end
+
 pickers.find_files_cursor = function()
 	require'telescope.builtin'.find_files({
 		default_text = vim.fn.expand('<cword>'),
@@ -228,10 +235,10 @@ local setup = function()
 					['<C-q>'] = myactions.smart_send_to_qflist,
 					-- ['<C-l'] = actions.complete_tag,
 
-					['<Down>'] = actions.cycle_history_next,
-					['<Up>'] = actions.cycle_history_prev,
-					['<C-n>'] = actions.cycle_history_next,
-					['<C-p>'] = actions.cycle_history_prev,
+					['<Down>'] = actions.move_selection_next,
+					['<Up>'] = actions.move_selection_previous,
+					['<Right>'] = actions.cycle_history_next,
+					['<Left>'] = actions.cycle_history_prev,
 
 					['<C-b>'] = actions.preview_scrolling_up,
 					['<C-f>'] = actions.preview_scrolling_down,
@@ -241,16 +248,16 @@ local setup = function()
 					['q']     = actions.close,
 					['<Esc>'] = actions.close,
 
-					['<Tab>']   = actions.move_selection_next,
-					['<S-Tab>'] = actions.move_selection_previous,
+					['<Down>']   = actions.move_selection_next,
+					['<Up>'] = actions.move_selection_previous,
 					['<C-u>'] = myactions.page_up,
 					['<C-d>'] = myactions.page_down,
 
 					['<C-b>'] = actions.preview_scrolling_up,
 					['<C-f>'] = actions.preview_scrolling_down,
 
-					['<C-n>'] = actions.cycle_history_next,
-					['<C-p>'] = actions.cycle_history_prev,
+					['<Left>'] = actions.cycle_history_next,
+					['<Right>'] = actions.cycle_history_prev,
 
 					['*'] = actions.toggle_all,
 					['u'] = actions.drop_all,
