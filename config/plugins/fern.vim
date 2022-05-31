@@ -100,6 +100,7 @@ function! s:init_fern()
 	nmap <buffer><silent> .      <Plug>(fern-action-repeat)
 	" nmap <buffer><silent>        <Plug>(fern-action-reveal)
 	nmap <buffer><silent> B      <Plug>(fern-action-save-as-bookmark)
+	nmap <buffer><silent> d      <Plug>(fern-action-trash)
 	nmap <buffer><silent> D      <Plug>(fern-action-trash)
 	nmap <buffer><silent> yy     <Plug>(fern-action-yank)
 	nmap <buffer><silent> w

@@ -10,8 +10,8 @@
 - repo: thinca/vim-localrc
 - { repo: rafi/awesome-vim-colorschemes, merged: 0 }
 
-- repo: christoomey/vim-tmux-navigator
-  if: "! (has('win32') || has('win64'))"
+# - repo: christoomey/vim-tmux-navigator
+#  if: "! (has('win32') || has('win64'))"
 
 - repo: tpope/vim-sleuth
   hook_add: |-
@@ -307,7 +307,7 @@
 - { repo: hrsh7th/cmp-vsnip, on_source: nvim-cmp }
 - { repo: hrsh7th/cmp-path, on_source: nvim-cmp }
 - { repo: hrsh7th/cmp-emoji, on_source: nvim-cmp }
-- { repo: andersevenrud/cmp-tmux, on_source: nvim-cmp }
+# - { repo: andersevenrud/cmp-tmux, on_source: nvim-cmp }
 
 - repo: hrsh7th/vim-vsnip
   depends: [ vim-vsnip-integ, friendly-snippets ]
@@ -334,13 +334,13 @@
 
 - repo: nvim-telescope/telescope.nvim
   if: has('nvim-0.5')
-  depends: [ todo-comments.nvim, telescope-zoxide, session-lens ]
+  depends: [ todo-comments.nvim, session-lens, telescope-zoxide ]
   on_cmd: Telescope
   on_lua: telescope
   hook_add: lua require('plugins.telescope').preload()
   hook_post_source: lua require('plugins.telescope').setup()
 
-- repo: tiagovla/session-lens
+- repo: rmagatti/session-lens
   if: has('nvim-0.5')
   depends: auto-session
   lazy: true
@@ -433,7 +433,7 @@
 - { repo: chr4/nginx.vim, on_ft: nginx }
 - { repo: vim-jp/syntax-vim-ex, on_ft: vim }
 - { repo: MTDL9/vim-log-highlighting, on_ft: log }
-- { repo: tmux-plugins/vim-tmux, on_ft: tmux }
+# - { repo: tmux-plugins/vim-tmux, on_ft: tmux }
 - { repo: reasonml-editor/vim-reason-plus, on_ft: [ reason, merlin ] }
 
 - repo: plasticboy/vim-markdown

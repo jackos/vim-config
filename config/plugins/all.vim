@@ -157,7 +157,7 @@ if dein#tap('diffview.nvim')
 endif
 
 if dein#tap('vimwiki')
-	nnoremap <Leader>W <cmd>VimwikiIndex<CR>
+	nnoremap <Leader>w <cmd>VimwikiIndex<CR>
 endif
 
 if dein#tap('vim-choosewin')

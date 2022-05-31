@@ -15,126 +15,15 @@ nnoremap <Up>    <cmd>resize +8<CR>
 nnoremap <Down>  <cmd>resize -8<CR>
 nnoremap <Left>  <cmd>vertical resize +8<CR>
 nnoremap <Right> <cmd>vertical resize -8<CR>
-" With this function you can reuse the same terminal in neovim.
-" You can toggle the terminal and also send a command to the same terminal.
-
-let s:monkey_terminal_window = -1
-let s:monkey_terminal_buffer = -1
-let s:monkey_terminal_job_id = -1
-let s:monkey_terminal_window_size = -1
-
-function! MonkeyTerminalOpen()
-  " Check if buffer exists, if not create a window and a buffer
-  if !bufexists(s:monkey_terminal_buffer)
-    " Creates a window call monkey_terminal
-    new monkey_terminal
-    " Moves the window to the bottom
-    wincmd J
-    resize 15
-    let s:monkey_terminal_job_id = termopen($SHELL, { 'detach': 1 })
-
-     " Change the name of the buffer to "Terminal 1"
-     silent file Terminal\ 1
-     " Gets the id of the terminal window
-     let s:monkey_terminal_window = win_getid()
-     let s:monkey_terminal_buffer = bufnr('%')
-
-    " The buffer of the terminal won't appear in the list of the buffers
-    " when calling :buffers command
-    set nobuflisted
-  else
-    if !win_gotoid(s:monkey_terminal_window)
-    sp
-    " Moves to the window below the current one
-    wincmd J
-    execute "resize " . s:monkey_terminal_window_size
-    buffer Terminal\ 1
-     " Gets the id of the terminal window
-     let s:monkey_terminal_window = win_getid()
-    endif
-  endif
-endfunction
-
-function! MonkeyTerminalToggle()
-  if win_gotoid(s:monkey_terminal_window)
-    call MonkeyTerminalClose()
-  else
-    call MonkeyTerminalOpen()
-  endif
-endfunction
-
-function! MonkeyTerminalClose()
-  if win_gotoid(s:monkey_terminal_window)
-    let s:monkey_terminal_window_size = winheight(s:monkey_terminal_window)
-    " close the current window
-    hide
-  endif
-endfunction
-
-function! MonkeyTerminalExec(cmd)
-  if !win_gotoid(s:monkey_terminal_window)
-    call MonkeyTerminalOpen()
-  endif
-
-  " clear current input
-  call jobsend(s:monkey_terminal_job_id, "clear\n")
-
-  " run cmd
-  call jobsend(s:monkey_terminal_job_id, a:cmd . "\n")
-  normal! G
-  wincmd p
-endfunction
-
-" With this maps you can now toggle the terminal
-nnoremap <A-T> :call MonkeyTerminalToggle()<cr>i
-tnoremap <A-T> <C-\><C-n>:call MonkeyTerminalToggle()<cr>i
-nnoremap <silent> <A-t> :silent !i3term<CR>
-
-" inoremap <A-t> <Esc>:bot new<CR>:term<CR>i
-" tnoremap <A-t> <C-\><C-n>:vsplit<CR>:term<CR>i
-"
-" Terminal go back to normal mode
-"tnoremap <Esc> <C-\><C-n>
-"tnoremap <C-k> <C-\><C-n>
-"tnoremap :q! <C-\><C-n>:q!<CR>
-
-
-autocmd BufWinEnter,WinEnter term://* startinsert
-autocmd BufLeave term://* stopinsert
-" Terminal mappings
-if exists(':tnoremap')
-	if has('nvim')
-		" Windows
-		tnoremap <C-h> <C-\><C-n><C-W>h
-		tnoremap <C-k> <C-\><C-n><C-W>k
-		tnoremap <C-l> <C-\><C-n><C-W>l
-		tnoremap <C-j> <C-\><C-n><C-W>j
-		tnoremap <F8> <C-\><C-n>
-		tnoremap <C-w> <C-\><C-n>:bwipeout!<CR>
-		" Tabs
-		tnoremap <A-h> <C-\><C-n>:tabprevious<CR>
-		tnoremap <A-j> <C-\><C-n><C-W>j
-		tnoremap <A-k> <C-\><C-n><C-W>k
-		tnoremap <A-l> <C-\><C-n>:tabnext<CR>
-	else
-		tnoremap <C-k> <C-w><C-k>
-		tnoremap <C-h> <C-w><C-h>
-		tnoremap <C-l> <C-w><C-l>
-		tnoremap <C-w> <C-w><C-w>
-		tnoremap <C-j> <C-w>
-	endif
-endif
-
-
-" }}}
-" Navigation {{{
-" ----------
-
 """"""""""""""""""""""""""""""""""""""""""""
 " Personal maps
 """"""""""""""""""""""""""""""""""""""""""""
 nnoremap <A-r> :source $MYVIMRC<CR>
+nnoremap <A-;> A;<Esc>
+nnoremap <Leader>nt :tabnew 
+nnoremap <Leader>nv :vsplit 
 
+nnoremap <silent> <A-t> :silent !i3term<CR>
 "" Open URLs
 function! HandleURL()
   let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*[^\)]')
@@ -185,11 +74,6 @@ nmap [a <cmd>lprev<CR>
 nnoremap ]w <cmd>WhitespaceNext<CR>
 nnoremap [w <cmd>WhitespacePrev<CR>
 
-" Navigation in command line
-cnoremap <C-h> <Home>
-cnoremap <C-l> <End>
-cnoremap <C-f> <Right>
-cnoremap <C-b> <Left>
 
 " }}}
 " Scroll {{{
@@ -261,10 +145,10 @@ xnoremap <S-Tab> <gv
 " nmap <<  <<_
 
 " Drag current line/s vertically and auto-indent
-nnoremap <A-k> <cmd>move-2<CR>==
-nnoremap <A-j> <cmd>move+<CR>==
-xnoremap <A-k> :move'<-2<CR>gv=gv
-xnoremap <A-j> :move'>+<CR>gv=gv
+nnoremap <C-j> <cmd>move+<CR>==
+nnoremap <C-k> <cmd>move-2<CR>==
+xnoremap <C-j> :move'>+<CR>gv=gv
+xnoremap <C-k> :move'<-2<CR>gv=gv
 
 " Duplicate lines without affecting PRIMARY and CLIPBOARD selections.
 nnoremap <Leader>d m`""Y""P``
@@ -349,11 +233,15 @@ nmap <A-c> :lcd %:p:h<CR>:pwd<CR>
 " Open file under the cursor in a vsplit
 nnoremap gf <cmd>vertical wincmd f<CR>
 
+
+nnoremap [C-s]x  <cmd>call <SID>window_empty_buffer()<CR>
+
+
 " Fast saving from all modes
-nnoremap <Leader>w <cmd>write<CR>
-nnoremap <C-s> <cmd>write<CR>
-xnoremap <C-s> <cmd>write<CR>
-cnoremap <C-s> <cmd>write<CR>
+nnoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
+inoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
+xnoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
+cnoremap <C-s> <cmd>lua vim.lsp.buf.formatting()<CR><cmd>write!<CR>
 
 " }}}
 " Editor UI {{{
@@ -374,14 +262,15 @@ nnoremap g1 <cmd>tabfirst<CR>
 nnoremap g5 <cmd>tabprevious<CR>
 nnoremap g9 <cmd>tablast<CR>
 
-nnoremap <A-w>     <cmd>tabclose<CR>
-nnoremap <A-l>     <cmd>tabnext<CR>
-nnoremap <A-h>     <cmd>tabprevious<CR>
+nnoremap <C-w>     <cmd>tabclose<CR>
+nnoremap <C-l>     <cmd>tabnext<CR>
+nnoremap <C-h>     <cmd>tabprevious<CR>
+
 nnoremap <A-m>     <cmd>MarkdownPreview<CR>
 
 " Moving tabs
-nnoremap <A-{> <cmd>-tabmove<CR>
-nnoremap <A-}> <cmd>+tabmove<CR>
+nnoremap <C-{> <cmd>-tabmove<CR>
+nnoremap <C-}> <cmd>+tabmove<CR>
 
 " Show syntax highlight groups for character under cursor
 nmap <Leader>tt <cmd>echo 'hi<' . synIDattr(synID(line('.'), col('.'), 1), 'name')
@@ -429,8 +318,12 @@ nnoremap <C-x> <C-w>x
 nnoremap  [Window]   <Nop>
 nmap      s [Window]
 
-nnoremap <C-w>			<cmd>close<CR>
-nnoremap <F4>				<cmd>quit<CR>
+nnoremap <A-w>	    <cmd>close<CR>
+nnoremap <F4> 	    <cmd>quit<CR>
+nnoremap <A-h>	    <C-W><C-h>
+nnoremap <A-j>	    <C-W><C-j>
+nnoremap <A-k>	    <C-W><C-k>
+nnoremap <A-l>	    <C-W><C-l>
 nnoremap [Window]b  <cmd>buffer#<CR>
 nnoremap [Window]d  <cmd>bdelete<CR>
 nnoremap [Window]v  <cmd>split<CR>
@@ -440,6 +333,34 @@ nnoremap [Window]o  <cmd>only<CR>
 nnoremap [Window]q  <cmd>quit<CR>
 nnoremap [Window]x  <cmd>call <SID>window_empty_buffer()<CR>
 nnoremap [Window]z  <cmd>call <SID>zoom()<CR>
+
+function! MarkWindowSwap()
+    " marked window number
+    let g:markedWinNum = winnr()
+    let g:markedBufNum = bufnr("%")
+endfunction
+
+function! DoWindowSwap()
+    let curWinNum = winnr()
+    let curBufNum = bufnr("%")
+    " Switch focus to marked window
+    exe g:markedWinNum . "wincmd w"
+
+    " Load current buffer on marked window
+    exe 'hide buf' curBufNum
+
+    " Switch focus to current window
+    exe curWinNum . "wincmd w"
+
+    " Load marked buffer on current window
+    exe 'hide buf' g:markedBufNum
+endfunction
+
+nnoremap <A-H> :call MarkWindowSwap()<CR> <C-w>h :call DoWindowSwap()<CR>
+nnoremap <A-J> :call MarkWindowSwap()<CR> <C-w>j :call DoWindowSwap()<CR>
+nnoremap <A-K> :call MarkWindowSwap()<CR> <C-w>k :call DoWindowSwap()<CR>
+nnoremap <A-L> :call MarkWindowSwap()<CR> <C-w>l :call DoWindowSwap()<CR>
+
 
 " Split current buffer, go to previous window and previous buffer
 nnoremap [Window]sv <cmd>split<CR>:wincmd p<CR>:e#<CR>

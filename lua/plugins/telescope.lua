@@ -12,6 +12,7 @@ local preload = function()
 	keymap('n', '<localleader>R', '<cmd>Telescope pickers<CR>', opts)
 	keymap('n', '<localleader>f', '<cmd>Telescope find_files<CR>', opts)
 	keymap('n', '<localleader>g', '<cmd>Telescope live_grep<CR>', opts)
+	keymap('n', '<localleader>w', '<cmd>lua require"plugins.telescope".pickers.grep_string_vimwiki()<CR>', opts)
 	keymap('n', '<localleader>b', '<cmd>Telescope buffers<CR>', opts)
 	keymap('n', '<localleader>h', '<cmd>Telescope highlights<CR>', opts)
 	keymap('n', '<localleader>j', '<cmd>Telescope jumplist<CR>', opts)
@@ -34,7 +35,6 @@ local preload = function()
 
 	-- Location-specific find files/directories
 	keymap('n', '<localleader>n', '<cmd>lua require"plugins.telescope".pickers.plugin_directories()<CR>', opts)
-	keymap('n', '<localleader>w', '<cmd>lua require"plugins.telescope".pickers.notebook()<CR>', opts)
 
 	-- Navigation
 	keymap('n', '<leader>/', '<cmd>Telescope current_buffer_fuzzy_find<CR>', opts)
@@ -102,6 +102,13 @@ end
 
 pickers.grep_string_cursor = function()
 	require'telescope.builtin'.live_grep({
+		default_text = vim.fn.expand('<cword>'),
+	})
+end
+
+pickers.grep_string_vimwiki = function()
+	require'telescope.builtin'.live_grep({
+		cwd = "~/vimwiki",
 		default_text = vim.fn.expand('<cword>'),
 	})
 end
@@ -267,10 +274,10 @@ local setup = function()
 					['<C-q>'] = myactions.smart_send_to_qflist,
 					-- ['<C-l'] = actions.complete_tag,
 
-					['<Down>'] = actions.cycle_history_next,
-					['<Up>'] = actions.cycle_history_prev,
-					['<C-n>'] = actions.cycle_history_next,
-					['<C-p>'] = actions.cycle_history_prev,
+					['<Down>'] = actions.move_selection_next,
+					['<Up>'] = actions.move_selection_previous,
+					['<Right>'] = actions.cycle_history_next,
+					['<Left>'] = actions.cycle_history_prev,
 
 					['<C-b>'] = actions.preview_scrolling_up,
 					['<C-f>'] = actions.preview_scrolling_down,
@@ -280,16 +287,16 @@ local setup = function()
 					['q']     = actions.close,
 					['<Esc>'] = actions.close,
 
-					['<Tab>']   = actions.move_selection_next,
-					['<S-Tab>'] = actions.move_selection_previous,
+					['<Down>']   = actions.move_selection_next,
+					['<Up>'] = actions.move_selection_previous,
 					['<C-u>'] = myactions.page_up,
 					['<C-d>'] = myactions.page_down,
 
 					['<C-b>'] = actions.preview_scrolling_up,
 					['<C-f>'] = actions.preview_scrolling_down,
 
-					['<C-n>'] = actions.cycle_history_next,
-					['<C-p>'] = actions.cycle_history_prev,
+					['<Left>'] = actions.cycle_history_next,
+					['<Right>'] = actions.cycle_history_prev,
 
 					['*'] = actions.toggle_all,
 					['u'] = actions.drop_all,
