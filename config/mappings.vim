@@ -74,6 +74,11 @@ nmap [a <cmd>lprev<CR>
 nnoremap ]w <cmd>WhitespaceNext<CR>
 nnoremap [w <cmd>WhitespacePrev<CR>
 
+" Navigation in command line
+cnoremap <C-h> <Home>
+cnoremap <C-l> <End>
+cnoremap <C-f> <Right>
+cnoremap <C-b> <Left>
 
 " }}}
 " Scroll {{{
